@@ -12,7 +12,6 @@ import Foundation
 class CalculatorViewController: UIViewController {
 
     @IBOutlet weak var textLabel: UILabel!
-    @IBOutlet weak var deleteButton: UIButton!
     var previousNumber: Double = 0
     var currentNumber: Double = 0
     var sign: Int = -1
@@ -42,25 +41,25 @@ class CalculatorViewController: UIViewController {
     }
 
     @IBAction func operationPressed(_ sender: UIButton) {
-        print(currentNumber)
-        print(sign)
+
+        if sign == 1 {
+            currentNumber = previousNumber + currentNumber
+        }
+        else if sign == 2 {
+            currentNumber = previousNumber - currentNumber
+        }
+        else if sign == 3 {
+            currentNumber = previousNumber * currentNumber
+        }
+        else if sign == 4 {
+            currentNumber = previousNumber / currentNumber
+        }
+        else if sign == 5 {
+            currentNumber = previousNumber.truncatingRemainder(dividingBy: currentNumber)
+        }
+    
         switch sender.tag {
         case 0:
-            if sign == 1 {
-                currentNumber = previousNumber + currentNumber
-            }
-            else if sign == 2 {
-                currentNumber = previousNumber - currentNumber
-            }
-            else if sign == 3 {
-                currentNumber = previousNumber * currentNumber
-            }
-            else if sign == 4 {
-                currentNumber = previousNumber / currentNumber
-            }
-            else if sign == 5 {
-                currentNumber = previousNumber.truncatingRemainder(dividingBy: currentNumber)
-            }
             textLabel.text = String(currentNumber)
         case 1:
             textLabel.text = "+"
@@ -73,11 +72,11 @@ class CalculatorViewController: UIViewController {
         case 5:
             textLabel.text = "%"
         default:
-            print("Invalid sign")
+            print("Invalid sign pressed")
         }
-        signAdded = true
         previousNumber = currentNumber
         sign = sender.tag
+        signAdded = true
     }
     
 
@@ -85,25 +84,25 @@ class CalculatorViewController: UIViewController {
         
         var digit: String = ""
         
-        if signAdded == true { // jezeli wprowadzono znak
+        if signAdded == true {
             currentNumber = 0
             textLabel.text = ""
             signAdded = false
         }
         
-        if sender.tag == 10 { // jezeli tappnieto przecinek
-            if !textLabel.text!.contains(".") {
-                if currentNumber == 0 {
-                    digit = "0."
-                }
-                else{
-                    digit = "."
-                }
+        if sender.tag == 10 && !textLabel.text!.contains(".") {
+            if currentNumber == 0 {
+                digit = "0."
             }
-        } else { // jezeli tappnieto cyfre
+            else {
+                digit = "."
+            }
+        }
+        else {
             if currentNumber == 0 && !textLabel.text!.contains(".") { textLabel.text = "" }
             digit = String(sender.tag)
         }
+        
         textLabel.text = textLabel.text! + digit
         currentNumber = Double(textLabel.text!)!
     }
